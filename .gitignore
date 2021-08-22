@@ -50,3 +50,12 @@
 
 # Embedded web-server pid file
 /.web-server-pid
+
+
+###> symfony/phpunit-bridge ###
+/weather/.phpunit
+/weather/.phpunit.result.cache
+/weather/phpunit.xml
+###< symfony/phpunit-bridge ###
+nbproject/*
+/weather/nbproject/private/

@@ -2,5 +2,6 @@ FROM php:7.4-apache
 RUN docker-php-ext-install mysqli
 
 RUN curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
+COPY ./conf/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 WORKDIR /var/www/html

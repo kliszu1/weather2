@@ -1,5 +1,5 @@
 FROM php:7.4-apache 
-RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable mysqli pdo pdo_mysql
 
 RUN curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
 COPY ./conf/000-default.conf /etc/apache2/sites-available/000-default.conf

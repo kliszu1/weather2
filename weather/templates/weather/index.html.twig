@@ -1,0 +1,38 @@
+{% block body %}
+    <div class='weatherContner'>
+        <div class='weatherContnerHead'>
+            <div class='weatherTitle'>
+                <label>Pogoda</label>
+            </div>
+            <div class='weatherContnerSelect'>
+                <div class='weatherContnerServis'>
+                    <label>Wybierz serwis</label>
+                    <select class='form-control serviceType'>
+                        <option value=''>Wybierz</option>
+                        <option value='1'>OpenWeather</option>
+                        <option value='2'>AccuWeather</option>
+                    </select>
+                </div>
+                <div class='weatherContnerCity'>
+                    <label >Wybierz miasto</label>
+                    <input type='text' class='form-control cityWeather'/>
+                </div>
+            </div>
+            <div class='weatherContnerError'>
+                    <label class='weatherContnerErrorMessage'></label>
+                </div>
+            <div class='weatherContnerButton'>
+                <button class='btn btn-primary checkWeather'>Sprawdź pogodę</button>
+            </div>
+        </div>
+        <div class='weatherContnerBody'>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+   {{ encore_entry_link_tags('weather') }}
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('weather') }}
+{% endblock %}

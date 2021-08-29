@@ -45,10 +45,7 @@ class AccuWeatherService implements WeatherServicesInteface {
         return $this;
     }
 
-    public function init() : ApiResponse {
-        $apiResponse = new ApiResponse();
-        $apiResponse->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_OK);
-        
+    public function init(ApiResponse $apiResponse) : ApiResponse {
         $this->prepareDataToSend();
         $apiResponse = $this->findCityKeyByName($apiResponse);
    

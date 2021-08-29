@@ -12,7 +12,7 @@ use App\ValueObject\ApiResponse;
 
 interface WeatherServicesInteface {
     public function setCity(string $city);
-    public function init() : ApiResponse;
+    public function init(ApiResponse $apiResponse) : ApiResponse;
     public function prepareDataToSend();
     public function getWeatherInfo(ApiResponse $apiResponse) : ApiResponse;
 }

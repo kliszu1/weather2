@@ -32,32 +32,25 @@ class DefaultController extends AbstractController {
     public function getWeatherControler()
     {
         $weatherStrategy = new WeatherStrategy();
+        $apiResponse = new ApiResponse();
+        
         $service = $weatherStrategy->selectService($_POST['serviceType']);
-
-
-        if(!is_object($service)){
-            $apiResponse = new ApiResponse();
+        
+        if(is_object($service)){
+            $apiResponse = $service
+                ->setCity($_POST['city'])
+                ->init($apiResponse);
             
+            if($apiResponse->getStatus() === ResponseApiStatusesDictionary::KEY_STATUS_OK){
+                $apiResponse->setHtml(
+                    $this->renderView('weather/readyWeather.html.twig', ['weatherData' => $apiResponse->getData()])
+                );
+            } 
+        } else {
             $apiResponse
                 ->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_ERROR)
                 ->setMessage(MessagesDictionary::STATUS_NO_SERVICE_VALUE);
-            
-            echo json_encode($apiResponse);
-            exit;
         }
-        
-        $apiResponse = $service
-            ->setCity($_POST['city'])
-            ->init();
-
-        if($apiResponse->getStatus() === ResponseApiStatusesDictionary::KEY_STATUS_ERROR){
-            echo json_encode($apiResponse);
-            exit;
-        }
-        
-        $apiResponse->setHtml(
-            $this->renderView('weather/readyWeather.html.twig', ['weatherData' => $apiResponse->getData()])
-        );
 
         echo json_encode($apiResponse);
         exit;

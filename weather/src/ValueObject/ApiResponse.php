@@ -4,7 +4,7 @@ namespace App\ValueObject;
 
 use App\ValueObject\WeatherInformation;
 use JsonSerializable;
-
+use App\Dictionary\ResponseApiStatusesDictionary;
 /**
  * Description of ApiResponse
  *
@@ -31,7 +31,11 @@ class ApiResponse implements JsonSerializable{
      * @var WeatherInformation
      */
     private $data;
-
+    
+    public function __construct(string $status = ResponseApiStatusesDictionary::KEY_STATUS_OK) {
+        $this->status = $status;
+    }
+   
     public function getStatus() :string {
         return $this->status;
     }

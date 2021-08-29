@@ -30,11 +30,10 @@ function getWeather(serviceType,weatherContnerCity){
         }, 
         dataType : 'json',
         success: function(response){
-            $('.weatherContnerBody').html();
+            $('.weatherContnerBody').html('')
             $('.weatherContnerErrorMessage').text('');
 
             switch(response.status){
-                
                 case 'error':
                     $('.weatherContnerErrorMessage').text(response.message);
                 break;

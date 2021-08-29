@@ -8,7 +8,7 @@ namespace App\Dictionary;
  * @author Kliszu
  */
 class MessagesDictionary {
-    const STATUS_DATA_DOWNLOAD_ERROR_VALUE = 'Błąd pobierania danych';
     const STATUS_BAD_LOCATION_VALUE = 'Zła lokalizacja';
     const STATUS_NO_SERVICE_VALUE = 'Brak Serwisu';
+    const STATUS_DATA_DOWNLOAD_ERROR_VALUE = 'Błąd pobierania danych';
 }

@@ -46,10 +46,7 @@ class OpenWeatherService implements WeatherServicesInteface {
         return $this;
     }
 
-    public function init() : ApiResponse  {
-        $apiResponse = new ApiResponse();
-        $apiResponse->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_OK);
-        
+    public function init(ApiResponse $apiResponse) : ApiResponse  {
         $this->prepareDataToSend();
         return $this->getWeatherInfo($apiResponse);
     }
@@ -84,13 +81,13 @@ class OpenWeatherService implements WeatherServicesInteface {
         if(empty($response)){
             return $this->apiResponse
                 ->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_ERROR)
-                ->setMessage(MessagesDictionary::KEY_STATUS_DATA_DOWNLOAD_ERROR);
+                ->setMessage(MessagesDictionary::STATUS_DATA_DOWNLOAD_ERROR_VALUE);
         }
         
         if(empty($response['coord'])){
             return $apiResponse
                 ->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_ERROR)
-                ->setMessage(MessagesDictionary::KEY_STATUS_BAR_LOCATION);
+                ->setMessage(MessagesDictionary::STATUS_BAD_LOCATION_VALUE);
         }
         
         $weatherInformation = new WeatherInformation(

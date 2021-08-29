@@ -32,8 +32,9 @@ function getWeather(serviceType,weatherContnerCity){
         success: function(response){
             $('.weatherContnerBody').html();
             $('.weatherContnerErrorMessage').text('');
-            
+
             switch(response.status){
+                
                 case 'error':
                     $('.weatherContnerErrorMessage').text(response.message);
                 break;

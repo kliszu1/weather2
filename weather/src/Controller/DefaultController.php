@@ -8,6 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Controller\Weather\Strategy\WeatherStrategy;
 use Symfony\Component\Config\Builder\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\ValueObject\ApiResponse;
+use App\Dictionary\ResponseApiStatusesDictionary;
+use App\Dictionary\MessagesDictionary;
 /**
  * Description of DefaultController
  *
@@ -31,24 +34,32 @@ class DefaultController extends AbstractController {
         $weatherStrategy = new WeatherStrategy();
         $service = $weatherStrategy->selectService($_POST['serviceType']);
 
+
         if(!is_object($service)){
-            echo json_encode('Brak Serwisu');
+            $apiResponse = new ApiResponse();
+            
+            $apiResponse
+                ->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_ERROR)
+                ->setMessage(MessagesDictionary::STATUS_NO_SERVICE_VALUE);
+            
+            echo json_encode($apiResponse);
             exit;
         }
         
-        $response = $service
+        $apiResponse = $service
             ->setCity($_POST['city'])
             ->init();
 
-        if($response['status'] === 'error'){
-            echo json_encode($response);
+        if($apiResponse->getStatus() === ResponseApiStatusesDictionary::KEY_STATUS_ERROR){
+            echo json_encode($apiResponse);
             exit;
         }
+        
+        $apiResponse->setHtml(
+            $this->renderView('weather/readyWeather.html.twig', ['weatherData' => $apiResponse->getData()])
+        );
 
-        echo json_encode([
-            'status' => 'ok',
-            'html' => $this->renderView('weather/readyWeather.html.twig', ['weatherData' => $response['data']])
-        ]);
+        echo json_encode($apiResponse);
         exit;
     }
 }

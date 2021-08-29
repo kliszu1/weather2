@@ -4,6 +4,10 @@ namespace App\Controller\Weather\Strategy\WeatherServices;
 
 use App\ValueObject\WeatherInformation;
 use App\Controller\Weather\Strategy\WeatherServicesInteface;
+use App\ValueObject\ApiResponse;
+use App\Dictionary\ResponseApiStatusesDictionary;
+use App\Dictionary\MessagesDictionary;
+
 /**
  * Description of YahooServices
  *
@@ -20,9 +24,18 @@ class OpenWeatherService implements WeatherServicesInteface {
     private $city;
     
     /**
-     * @var string 
+     * @var array 
      */
     private $configuration;
+    
+    /**
+     * @var ApiResponse 
+     */
+    private $apiResponse;
+    
+    public function __construct() {
+       $this->apiResponse = new ApiResponse();
+    }
 
     /**
      * @param string $city
@@ -33,9 +46,12 @@ class OpenWeatherService implements WeatherServicesInteface {
         return $this;
     }
 
-    public function init(){
+    public function init() : ApiResponse  {
+        $apiResponse = new ApiResponse();
+        $apiResponse->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_OK);
+        
         $this->prepareDataToSend();
-        return $this->getWeatherInfo();
+        return $this->getWeatherInfo($apiResponse);
     }
  
     public function prepareDataToSend() {
@@ -57,7 +73,7 @@ class OpenWeatherService implements WeatherServicesInteface {
         ];
     }
     
-    public function getWeatherInfo() {
+    public function getWeatherInfo(ApiResponse $apiResponse) : ApiResponse {
         $curl = curl_init();
         curl_setopt_array($curl, $this->configuration);
         $response = curl_exec($curl);
@@ -66,24 +82,23 @@ class OpenWeatherService implements WeatherServicesInteface {
         $response = json_decode($response, true);
         
         if(empty($response)){
-            return [
-                'status'=>'error',
-                'message'=>'Błąd pobierania danych'];
+            return $this->apiResponse
+                ->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_ERROR)
+                ->setMessage(MessagesDictionary::KEY_STATUS_DATA_DOWNLOAD_ERROR);
         }
         
         if(empty($response['coord'])){
-            return [
-                'status'=>'error',
-                'message'=>'Zła lokalizacja.'];
+            return $apiResponse
+                ->setStatus(ResponseApiStatusesDictionary::KEY_STATUS_ERROR)
+                ->setMessage(MessagesDictionary::KEY_STATUS_BAR_LOCATION);
         }
         
-        return [
-            'status'=>'ok',
-            'data'=> new WeatherInformation(
-                $response['main']['temp'], 
-                $response['main']['temp_max'], 
-                $response['main']['temp_min']
-            )
-        ];
+        $weatherInformation = new WeatherInformation(
+            $response['main']['temp'], 
+            $response['main']['temp_max'], 
+            $response['main']['temp_min']
+        );
+        
+        return $apiResponse->setData($weatherInformation);
     }
 }
